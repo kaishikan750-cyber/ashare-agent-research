@@ -9,7 +9,7 @@ FOLDERS=['cn_research','research_agent','api','frontend','mcp_server','tests','d
 FILES=['README.md','README_STAGE3.md','README_STAGE2.md','README_CN_RESEARCH.md','LICENSE','pyproject.toml','poetry.lock',
        'requirements-research.txt','requirements-stage2.txt','requirements-stage2-lock.txt','requirements-stage3.txt',
        'requirements-stage3-lock.txt','requirements-demo.txt','start_stage2.py','start_stage3.py',
-       '.env.example','.stage2.env.example','.stage3.env.example','.gitignore','.dockerignore','Dockerfile','compose.yaml']
+       '.env.example','.stage2.env.example','.stage3.env.example','.gitignore','.gitattributes','.dockerignore','Dockerfile','compose.yaml']
 
 
 def package():

@@ -1,0 +1,7 @@
+# Preserve the delivered byte hashes across Windows and Unix checkouts.
+* -text
+* whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+*.pdf binary
+*.png binary
+*.mp4 binary
+*.zip binary
