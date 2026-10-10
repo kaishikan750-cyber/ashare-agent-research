@@ -1,0 +1,4 @@
+-r requirements-stage2.txt
+langchain>=1.0,<2
+langchain-openai>=1.0,<2
+

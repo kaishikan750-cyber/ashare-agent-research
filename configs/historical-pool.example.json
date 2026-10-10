@@ -1,0 +1,10 @@
+{
+  "dataset_id": "sample_stage3",
+  "universes": [{
+    "name": "declared_history", "selector": "custom",
+    "memberships": [
+      {"code": "600001", "known_at": "2025-01-01", "effective_from": "2025-01-02"},
+      {"code": "000001", "known_at": "2025-04-01", "effective_from": "2025-04-02"}
+    ]
+  }]
+}

@@ -1,4 +1,25 @@
-# AI Hedge Fund
+# A-share Research Lab / A 股隔夜反转 Agent
+
+在 `virattt/ai-hedge-fund` checkout 中新增的研究模块：事件驱动 A 股回测、LangGraph 研究流程、FastAPI 本地服务、浏览器工作台和 MCP 只读工具。
+
+第三阶段快速开始（Python 3.11+）：
+
+```powershell
+python start_stage3.py
+```
+
+首次运行自动创建独立虚拟环境、安装锁定依赖；随后打开 <http://127.0.0.1:8000>。默认离线演示无需模型密钥。
+
+- [第三阶段说明](README_STAGE3.md)：LangChain、Skills、walk-forward、敏感性、基准、Docker、CI、博客与视频。
+- [第二阶段说明](README_STAGE2.md)：上一阶段历史说明。
+- [第一阶段说明](README_CN_RESEARCH.md)：CSV 行情和命令行回测。
+- [架构和设计](docs/stage2_architecture.md)：数据副本、状态图和工具契约。
+
+新增研究引擎采用 A 股时点与成交账本，未把美股主交易引擎整体改造成 A 股；原上游代码、MIT License 和历史保留。模型只分析工具证据，不决定仓位或发送真实订单。
+
+---
+
+# Upstream: AI Hedge Fund
 
 This is a proof of concept for an AI-powered hedge fund. The goal of this project is to explore the use of AI to make trading decisions. This project is for **educational** purposes only and is not intended for real trading or investment.
 

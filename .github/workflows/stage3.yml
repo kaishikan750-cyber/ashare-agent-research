@@ -1,0 +1,42 @@
+name: Stage 3 reproducible research
+on: [push, pull_request, workflow_dispatch]
+permissions:
+  contents: read
+jobs:
+  research:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python: ['3.11', '3.13']
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+          cache: pip
+          cache-dependency-path: requirements-stage3-lock.txt
+      - run: python -m pip install -r requirements-stage3-lock.txt
+      - run: python -m pip check
+      - run: python -m pytest tests -q
+      - run: python -m research_agent.study_cli --config configs/study.example.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: research-${{ matrix.os }}-${{ matrix.python }}
+          path: outputs/stage3_demo/
+  container:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: docker build -t ashare-research:ci .
+      - run: |
+          docker run -d --name research-ci -p 127.0.0.1:8000:8000 ashare-research:ci
+          for i in $(seq 1 30); do
+            if curl -fsS http://127.0.0.1:8000/api/health; then break; fi
+            sleep 2
+          done
+          curl -fsS http://127.0.0.1:8000/api/health
+          curl -fsS http://127.0.0.1:8000/
+          docker exec research-ci python -c "from research_agent.tools import ResearchTools; assert ResearchTools().call('run_backtest', {})['metrics']['n_trades'] > 0"
+      - if: always()
+        run: docker logs research-ci

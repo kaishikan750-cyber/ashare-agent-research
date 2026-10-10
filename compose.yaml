@@ -1,0 +1,12 @@
+services:
+  research:
+    build: .
+    ports:
+      - "127.0.0.1:8000:8000"
+    volumes:
+      - research-results:/app/outputs
+    environment:
+      CN_OUTPUT_ROOT: /app/outputs/stage3
+    restart: unless-stopped
+volumes:
+  research-results:

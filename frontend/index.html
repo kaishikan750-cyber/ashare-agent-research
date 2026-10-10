@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>A 股研究工作台</title><link rel="stylesheet" href="/static/style.css?v=0.3.0"><script src="/static/app.js?v=0.3.0" defer></script><script src="/static/study.js?v=0.3.0" defer></script></head>
+<body>
+<header class="topbar"><a class="brand" href="/"><span class="brand-mark">α</span><span>A 股研究工作台<small>OVERNIGHT REVERSAL LAB</small></span></a><div class="top-links"><a href="/docs" target="_blank" rel="noreferrer">API 文档 ↗</a><span id="health" class="badge">连接中</span></div></header>
+<main>
+<section class="intro"><div><div class="eyebrow">RESEARCH / 03</div><h1>让每一个结论，都有证据。</h1><p>检查行情、计算隔夜反转、回放成交，验证样本外表现。</p></div><span class="version">LangChain · LangGraph · FastAPI · MCP</span></section>
+<div class="workspace">
+<aside class="panel controls"><div class="section-label">01 / 新建研究</div><h2>实验参数</h2>
+<form id="research-form">
+<label for="dataset">数据集</label><select id="dataset" name="dataset_id" required><option value="sample_ashare">演示数据 · sample_ashare</option></select><p class="hint" id="dataset-hint">演示数据只验证工程链路。</p>
+<label for="question">研究问题</label><textarea id="question" name="question" maxlength="2000" required rows="3">评估隔夜反转因子的表现、交易成本和数据质量。</textarea>
+<label for="mode">分析模式</label><select id="mode" name="mode"><option value="offline">离线演示 · 无需密钥</option><option value="llm" id="llm-option" disabled>模型分析 · 需服务端配置</option></select>
+<div class="field-row"><div><label for="quantile">入选比例</label><select id="quantile" name="quantile"><option value="0.2">20%</option><option value="0.1">10%</option><option value="0.5">50%</option></select></div><div><label for="capital">初始资金（元）</label><input id="capital" name="initial_capital" type="number" min="1000" max="100000000" value="1000000" required></div></div>
+<div class="costs"><span class="section-label">交易成本 / BPS</span><div class="cost-row"><div><label for="commission">佣金</label><input id="commission" name="commission_bps" type="number" min="0" max="100" step="0.1" value="3" required></div><div><label for="stamp">卖出印花税</label><input id="stamp" name="stamp_duty_bps" type="number" min="0" max="100" step="0.1" value="5" required></div><div><label for="slippage">单边滑点</label><input id="slippage" name="slippage_bps" type="number" min="0" max="100" step="0.1" value="5" required></div></div></div>
+<fieldset class="study-controls"><legend>第三阶段验证</legend><label><input id="enable-study" type="checkbox"> 启用 walk-forward 与稳健性检查</label><div class="field-row"><div><label for="train-sessions">训练窗（交易日）</label><input id="train-sessions" type="number" min="8" max="2000" value="60"></div><div><label for="test-sessions">测试窗（交易日）</label><input id="test-sessions" type="number" min="4" max="500" value="20"></div></div><p class="hint">默认 2 日间隔；3 个分位 × 3 个滑点；全池、沪主板、深主板。演示请选择 sample_stage3。自定义历史成分可用 API 或 CLI 配置。</p></fieldset>
+<button type="submit" id="run">开始研究 <span>↗</span></button><div id="error" class="error" role="alert" hidden></div>
+</form>
+<div class="timing"><h3>执行时间线</h3><p><b>T 收盘</b> 形成信号<br><b>T+1 开盘</b> 尝试买入<br><b>T+2 收盘</b> 尝试卖出</p><small>卖出受阻时继续持仓。买入失败的资金留在现金中。</small></div>
+<div class="history"><label for="history">最近实验</label><select id="history"><option value="">选择已保存的实验</option></select></div>
+</aside>
+<div class="results">
+<section class="panel process"><div class="panel-head"><div><span class="section-label">02 / 研究过程</span><h2>工具调用与证据</h2></div><span id="status" class="badge">等待实验</span></div><ol id="steps"><li>数据检查</li><li>因子快照</li><li>逐日回测</li><li>成本对照</li><li>研究结论</li></ol><div id="trace" class="trace" aria-live="polite">提交实验后，这里会显示研究进度。</div></section>
+<div id="empty" class="panel empty"><div class="empty-icon">↗</div><h2>从一个可复现的问题开始</h2><p>选择演示数据并开始研究，查看净值、成交与数据限制。<br>也可以将真实行情 CSV 放入项目的 data 目录。</p></div>
+<div id="output" hidden>
+<div class="metrics"><div class="metric"><span>总净收益</span><strong id="return">—</strong><small>含期末持仓盯市</small></div><div class="metric"><span>每日最大回撤</span><strong id="drawdown">—</strong><small>根据每日净值</small></div><div class="metric"><span>近似年化 Sharpe</span><strong id="sharpe">—</strong><small>日收益 × √252</small></div><div class="metric"><span>完成交易</span><strong id="trade-count">—</strong><small id="open-count">—</small></div></div>
+<section class="panel chart-panel"><div class="panel-head"><div><span class="section-label">03 / 回测结果</span><h2>每日净值</h2></div><span id="date-range" class="subtle"></span></div><div id="chart" role="img" aria-label="每日净值走势图"></div><div class="chart-legend"><span class="dot"></span> 扣除佣金、印花税与滑点 <span id="fee"></span></div></section>
+<section class="panel conclusion"><div class="panel-head"><h2>研究结论</h2><span id="source" class="badge"></span></div><p id="summary"></p><div id="llm-warning" class="notice" hidden></div><details open><summary>数据质量与研究限制</summary><ul id="warnings"></ul></details><div class="downloads"><a id="md-download" href="#">下载 Markdown 报告 ↓</a><a id="json-download" href="#" download>完整 JSON ↗</a></div></section>
+<section class="panel" id="study-panel" hidden><div class="panel-head"><h2>样本外验证</h2><a id="study-download" href="#">下载完整验证报告 ↗</a></div><p class="hint">股票池收益均来自连续样本外现金账本。等权基准是自定义买入持有；收益差不是风险调整 alpha。</p><div class="table-wrap"><table><thead><tr><th>股票池</th><th>折数</th><th>净收益</th><th>最大回撤</th><th>等权基准</th><th>收益差</th></tr></thead><tbody id="study-pools"></tbody></table></div><label for="study-pool">查看股票池</label><select id="study-pool"></select><div id="study-chart" role="img" aria-label="样本外策略与基准净值"></div><details open><summary>训练选参和测试窗</summary><div class="table-wrap"><table><thead><tr><th>训练日期</th><th>测试日期</th><th>选定分位</th><th>测试收益</th></tr></thead><tbody id="study-folds"></tbody></table></div></details><details><summary>参数敏感性（事后描述，不用于选参）</summary><div class="table-wrap"><table><thead><tr><th>分位</th><th>滑点 bps</th><th>净收益</th><th>最大回撤</th></tr></thead><tbody id="study-grid"></tbody></table></div></details><ul id="study-warnings"></ul></section>
+<section class="panel trade-panel"><div class="panel-head"><h2>成交与持仓</h2><span id="skipped" class="subtle"></span></div><div class="table-wrap"><table><thead><tr><th>代码</th><th>入场日期</th><th>退出日期</th><th>数量</th><th>净收益</th></tr></thead><tbody id="trades"></tbody></table></div><p id="table-note" class="hint"></p></section>
+</div></div></div>
+<footer>演示数据用于验证工程链路。Walk-forward 不等于策略有效性证明。 <a href="/docs" target="_blank" rel="noreferrer">API 文档 ↗</a></footer>
+</main></body></html>

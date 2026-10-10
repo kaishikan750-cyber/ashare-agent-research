@@ -1,0 +1,16 @@
+{
+  "dataset_id": "sample_stage3",
+  "train_sessions": 60,
+  "test_sessions": 20,
+  "purge_sessions": 2,
+  "quantiles": [0.1, 0.2, 0.5],
+  "slippages": [0, 5, 10],
+  "commission_bps": 3,
+  "stamp_duty_bps": 5,
+  "slippage_bps": 5,
+  "universes": [
+    {"name": "all", "selector": "all"},
+    {"name": "sh_main", "selector": "sh_main"},
+    {"name": "sz_main", "selector": "sz_main"}
+  ]
+}

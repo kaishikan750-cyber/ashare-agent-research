@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "ashare-research": {
+      "command": "C:/REPLACE_WITH_PROJECT_PATH/.venv-stage3/Scripts/python.exe",
+      "args": ["-m", "mcp_server.server"],
+      "env": {"PYTHONPATH": "C:/REPLACE_WITH_PROJECT_PATH"}
+    }
+  }
+}

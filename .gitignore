@@ -22,6 +22,7 @@ wheels/
 
 # Virtual Environment
 venv/
+.venv*/
 ENV/
 
 # Environment Variables
@@ -46,6 +47,19 @@ Thumbs.db
 
 # Txt files
 *.txt
+!requirements-research.txt
+!requirements-stage2.txt
+!requirements-stage2-lock.txt
+!requirements-stage3.txt
+!requirements-stage3-lock.txt
+!requirements-demo.txt
+.pytest_cache/
+/.stage2.env
+/.stage3.env
+/tmp/
+*.mp4
+!docs/demo/*.mp4
+!docs/demo/*.png
 
 # PDF files
 *.pdf

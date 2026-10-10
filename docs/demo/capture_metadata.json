@@ -1,0 +1,15 @@
+{
+  "method": "Actual headless Chromium local page captures",
+  "job_id": "2931ac398f3d4285ac54dff7a7120fbf",
+  "browser_errors": [],
+  "ui_checks": [
+    "submit",
+    "completed study",
+    "3 pool rows",
+    "6 folds",
+    "9 grid rows",
+    "report download",
+    "history reload",
+    "mobile no overflow"
+  ]
+}
